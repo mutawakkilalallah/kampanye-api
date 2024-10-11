@@ -56,9 +56,12 @@ module.exports = {
       if (user.hitungtps) {
         user.hitungtps.htps_upload = user.hitungtps.htps_upload
           .split(",")
-          .map(
-            (url) => process.env.WEB_URL + "/assets/img/berkastps/" + url.trim()
-          );
+          .map((url) => process.env.API_URL + "/" + url.trim());
+      }
+      if (user.hitungsuara) {
+        user.hitungsuara = user.hitungsuara.map((hpas) => {
+          hpas.paslon.paslon_foto = `${process.env.WEB_URL}/assets/img/paslon/${hpas.paslon.paslon_foto}`;
+        });
       }
       return res.status(200).json({
         status: 200,
