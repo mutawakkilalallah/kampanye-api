@@ -49,7 +49,7 @@ app.get("/", async (req, res) => {
           ON 
               c_paslon.paslon_id = hitungsuara.paslon_id
           WHERE 
-              c_paslon.id_kota = "16.04"
+              c_paslon.id_kota = "16.71"
           GROUP BY 
               c_paslon.paslon_id, c_paslon.paslon_nama, c_paslon.paslon_nourut, c_paslon.paslon_foto
       ),
@@ -77,7 +77,7 @@ app.get("/", async (req, res) => {
           FROM 
               tps
           WHERE 
-              tps.id_kota = "16.04"
+              tps.id_kota = "16.71"
       ),
       total_dpt AS (
           SELECT 
@@ -85,7 +85,7 @@ app.get("/", async (req, res) => {
           FROM 
               tps
           WHERE 
-              tps.id_kota = "16.04"
+              tps.id_kota = "16.71"
       ),
       total_suara_masuk AS (
           SELECT 
