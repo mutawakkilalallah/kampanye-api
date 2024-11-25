@@ -5,54 +5,54 @@ const socket = require("../../socket");
 module.exports = {
   inputSuara: async (req, res) => {
     try {
-      // const { error, value } = tpsSchema.inputSuara.validate(req.body);
-      // if (error) {
-      //   return res.status(400).json({
-      //     status: 400,
-      //     message: "BAD REQUEST",
-      //     error: error.message,
-      //   });
-      // }
-      // const tps = await Tps.findOne({
-      //   where: {
-      //     tps_id: req.user.tps_id,
-      //   },
-      // });
-      // if (!tps) {
-      //   return res.status(404).json({
-      //     status: 404,
-      //     message: "NOT FOUND",
-      //     error: "tps tidak ditemukan",
-      //   });
-      // }
-      // let htps_upload;
-      // if (!req.files || req.files.length === 0) {
-      //   htps_upload = "";
-      // } else {
-      //   htps_upload = req.files.map((file) => file.path).join(",");
-      // }
-      // value.hasil_suara = JSON.parse(value.hasil_suara);
-      // jml_suara =
-      //   value.hasil_suara[0].suara +
-      //   value.hasil_suara[1].suara +
-      //   value.hasil_suara[2].suara +
-      //   value.tidaksah;
+      const { error, value } = tpsSchema.inputSuara.validate(req.body);
+      if (error) {
+        return res.status(400).json({
+          status: 400,
+          message: "BAD REQUEST",
+          error: error.message,
+        });
+      }
+      const tps = await Tps.findOne({
+        where: {
+          tps_id: req.user.tps_id,
+        },
+      });
+      if (!tps) {
+        return res.status(404).json({
+          status: 404,
+          message: "NOT FOUND",
+          error: "tps tidak ditemukan",
+        });
+      }
+      let htps_upload;
+      if (!req.files || req.files.length === 0) {
+        htps_upload = "";
+      } else {
+        htps_upload = req.files.map((file) => file.path).join(",");
+      }
+      value.hasil_suara = JSON.parse(value.hasil_suara);
+      jml_suara =
+        value.hasil_suara[0].suara +
+        value.hasil_suara[1].suara +
+        value.hasil_suara[2].suara +
+        value.tidaksah;
 
-      // value.hasil_suara.map(async (hs) => {
-      //   await HitungSuara.create({
-      //     tps_id: req.user.tps_id,
-      //     id_user: req.user.id_user,
-      //     hpas_suara: hs.suara,
-      //     paslon_id: hs.paslon_id,
-      //   });
-      // });
-      // await HitungTps.create({
-      //   tps_id: req.user.tps_id,
-      //   id_user: req.user.id_user,
-      //   htps_tidaksah: value.tidaksah,
-      //   htps_upload,
-      //   htps_golput: tps.tps_jml_dpt - jml_suara,
-      // });
+      value.hasil_suara.map(async (hs) => {
+        await HitungSuara.create({
+          tps_id: req.user.tps_id,
+          id_user: req.user.id_user,
+          hpas_suara: hs.suara,
+          paslon_id: hs.paslon_id,
+        });
+      });
+      await HitungTps.create({
+        tps_id: req.user.tps_id,
+        id_user: req.user.id_user,
+        htps_tidaksah: value.tidaksah,
+        htps_upload,
+        htps_golput: tps.tps_jml_dpt - jml_suara,
+      });
 
       const data = await sequelize.query(
         `
@@ -71,7 +71,7 @@ paslon_suara AS (
     ON 
         c_paslon.paslon_id = hitungsuara.paslon_id
     WHERE 
-        c_paslon.id_kota = "16.71"
+        c_paslon.id_kota = "16.04"
     GROUP BY 
         c_paslon.paslon_id, c_paslon.paslon_nama, c_paslon.paslon_nourut, c_paslon.paslon_foto
 ),
@@ -87,7 +87,7 @@ total_tps_input AS (
     FROM 
         hitungsuara
     WHERE 
-        hitungsuara.tps_id IN (SELECT tps_id FROM tps WHERE tps.id_kota = "16.71")
+        hitungsuara.tps_id IN (SELECT tps_id FROM tps WHERE tps.id_kota = "16.04")
 ),
 total_tps AS (
     SELECT 
@@ -95,7 +95,7 @@ total_tps AS (
     FROM 
         tps
     WHERE 
-        tps.id_kota = "16.71"
+        tps.id_kota = "16.04"
 ),
 total_dpt AS (
     SELECT 
@@ -103,7 +103,7 @@ total_dpt AS (
     FROM 
         tps
     WHERE 
-        tps.id_kota = "16.71"
+        tps.id_kota = "16.04"
 ),
 total_suara_masuk AS (
     SELECT 

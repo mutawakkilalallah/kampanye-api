@@ -49,7 +49,7 @@ paslon_suara AS (
     ON 
         c_paslon.paslon_id = hitungsuara.paslon_id
     WHERE 
-        c_paslon.id_kota = "16.71"
+        c_paslon.id_kota = "16.04"
     GROUP BY 
         c_paslon.paslon_id, c_paslon.paslon_nama, c_paslon.paslon_nourut, c_paslon.paslon_foto
 ),
@@ -65,7 +65,7 @@ total_tps_input AS (
     FROM 
         hitungsuara
     WHERE 
-        hitungsuara.tps_id IN (SELECT tps_id FROM tps WHERE tps.id_kota = "16.71")
+        hitungsuara.tps_id IN (SELECT tps_id FROM tps WHERE tps.id_kota = "16.04")
 ),
 total_tps AS (
     SELECT 
@@ -73,7 +73,7 @@ total_tps AS (
     FROM 
         tps
     WHERE 
-        tps.id_kota = "16.71"
+        tps.id_kota = "16.04"
 ),
 total_dpt AS (
     SELECT 
@@ -81,7 +81,7 @@ total_dpt AS (
     FROM 
         tps
     WHERE 
-        tps.id_kota = "16.71"
+        tps.id_kota = "16.04"
 ),
 total_suara_masuk AS (
     SELECT 
