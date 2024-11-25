@@ -63,7 +63,7 @@ socket.on("updateData", (data) => {
 
       // Tambahkan elemen gambar
       const img = document.createElement("img");
-      img.src = `https://bzwin-pilkada.id/assets/img/paslon/${d.paslon_foto}`;
+      img.src = `https://sribertech.shop/assets/img/paslon/${d.paslon_foto}`;
       img.alt = `Foto Paslon ${d.paslon_nama}`;
       img.width = 150;
 
