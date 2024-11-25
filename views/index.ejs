@@ -1,129 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Hasil Pemilu - Real-time</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Quick Count - PILKADA 2024</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
     <script src="/socket.io/socket.io.js"></script>
     <script src="/js/client.js" defer></script>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 20px;
-        line-height: 1.6;
-      }
-      h1 {
-        text-align: center;
-        margin-bottom: 10px;
-      }
-      h2 {
-        text-align: center;
-        margin-bottom: 30px;
-        font-size: 1.2em;
-        color: #555;
-      }
-      #paslon-list {
-        display: flex;
-        justify-content: space-around;
-        list-style: none;
-        padding: 0;
-        margin-bottom: 30px;
-      }
-      #paslon-list li {
-        border: 1px solid #ddd;
-        padding: 15px;
-        border-radius: 8px;
-        text-align: center;
-        width: 30%;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      }
-      #paslon-list img {
-        border-radius: 8px;
-        margin-bottom: 10px;
-      }
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-      }
-      table th,
-      table td {
-        padding: 10px;
-        text-align: center;
-        border: 1px solid #ddd;
-      }
-      table th {
-        background-color: #f4f4f4;
-      }
-    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
   <body>
-    <h1>Hasil Pemilu Real-time</h1>
-    <h2>Rekapitulasi Suara Pemilihan Umum</h2>
-
-    <!-- Daftar Calon -->
-    <ul id="paslon-list">
-      <% data.forEach(d => { %>
-      <li>
-        <img
-          src="https://sribertech.shop/assets/img/paslon/<%= d.paslon_foto %>"
-          alt="Foto Paslon <%= d.paslon_nama %>"
-          width="150px"
-        />
-        <p><strong>Nomor Urut: <%= d.paslon_nourut %></strong></p>
-        <p><strong><%= d.paslon_nama %></strong></p>
-        <p class="total-suara">
-          Total Suara: <br />
-          <b><%= d.suara_paslon %> (<%= d.persen_suara_paslon %>)%</b>
-        </p>
-      </li>
-      <% }) %>
-    </ul>
-
-    <!-- Tabel Rekapan -->
-    <table>
-      <thead>
-        <tr>
-          <th>Kategori</th>
-          <th>Jumlah</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Tanggal</td>
-          <td>
-            <%= new Intl.DateTimeFormat('en-GB', { weekday: 'short', day:
-            'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute:
-            '2-digit', second: '2-digit', hour12: false, timeZone:
-            'Asia/Bangkok' }).format(new Date(data[0].tanggal)); %>
-          </td>
-        </tr>
-        <tr>
-          <td>Suara Tidak Sah</td>
-          <td><%= data[0].tidak_sah %></td>
-        </tr>
-        <tr>
-          <td>Total Partisipasi</td>
-          <td>
-            <%= data[0].total_suara_masuk %>
-            <b>(<%= data[0].persen_suara_masuk %>%)</b>
-          </td>
-        </tr>
-        <tr>
-          <td>Total Suara Sah</td>
-          <td>
-            <%= data[0].total_suara_sah %> / <%= data[0].total_dpt %>
-            <b>(<%= data[0].persen_total_suara_sah %>%)</b>
-          </td>
-        </tr>
-        <tr>
-          <td>Total TPS Input</td>
-          <td>
-            <%= data[0].total_tps_input %> / <%= data[0].total_tps %>
-            <b>(<%= data[0].persen_tps_input %>%)</b>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="container results-container">
+      <div class="row align-items-center mt-3">
+        <div class="col-md-3 text-center">
+          <img src="/sriber_logo.png" alt="sriber_logo" width="100" />
+        </div>
+        <div class="col-md-6">
+          <h2 class="text-center">QUICK COUNT - PILKADA 2024</h2>
+          <h4 class="text-muted text-center">
+            Kab. Lahat | Prov. Sumatera Selatan
+          </h4>
+        </div>
+        <div class="col-md-3 text-center">
+          <img src="/kpu_logo.png" alt="kpu_logo" width="100" />
+        </div>
+      </div>
+      <hr />
+      <p class="text-center">
+        <b
+          >Versi: <%= new Intl.DateTimeFormat('en-GB', { weekday: 'short', day:
+          'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute:
+          '2-digit', second: '2-digit', hour12: false, timeZone: 'Asia/Bangkok'
+          }).format(new Date(data[0].tanggal)); %> Progress: <%=
+          data[0].total_tps_input %> dari <%= data[0].total_tps %> TPS (<%=
+          data[0].persen_tps_input %>%), <%= data[0].total_suara_sah %> dari <%=
+          data[0].total_dpt %> DPT (<%= data[0].persen_total_suara_sah %>%)
+        </b>
+      </p>
+      <p class="text-center text-muted">
+        Suara Sah: <%= data[0].total_suara_sah %> Tidak Sah: <%=
+        data[0].tidak_sah %> Partisipasi: <%= data[0].total_suara_masuk %> (<%=
+        data[0].persen_suara_masuk %>%)
+      </p>
+      <div class="row align-items-center mt-5">
+        <div class="col-md-6">
+          <canvas id="paslonChart" height="300"></canvas>
+        </div>
+        <div class="col-md-6">
+          <% data.forEach(d => { %>
+          <div class="row align-items-center">
+            <div class="col-md-3">
+              <img
+                src="https://sribertech.shop/assets/img/paslon/<%= d.paslon_foto %>"
+                alt="Foto Paslon <%= d.paslon_nama %>"
+                height="96px"
+                width="96px"
+                style="object-fit: cover"
+              />
+            </div>
+            <div class="col-md-9">
+              <p>Nomer Urut: <b><%= d.paslon_nourut %></b></p>
+              <p><b><%= d.paslon_nama %></b></p>
+              <p>
+                Total Suara:
+                <b><%= d.suara_paslon %> (<%= d.persen_suara_paslon %>)%</b>
+              </p>
+            </div>
+          </div>
+          <hr />
+          <% }) %>
+        </div>
+      </div>
+    </div>
+    <script>
+      const initialData = <%- JSON.stringify(data || []).replace(/</g, '\\u003c') %>;
+    </script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
   </body>
 </html>

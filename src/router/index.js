@@ -9,6 +9,6 @@ const router = Router();
 
 router.use("/", authRouter);
 router.use("/profile", auth, profileRouter);
-router.use("/tps", auth, tpsRouter);
+router.use("/tps", tpsRouter);
 
 module.exports = router;
