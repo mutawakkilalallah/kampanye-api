@@ -49,10 +49,28 @@ socket.on("updateData", (data) => {
   tbody.innerHTML = ""; // Kosongkan tabel sebelum diperbarui
 
   const rows = [
+    {
+      kategori: "Tanggal",
+      jumlah: new Intl.DateTimeFormat("en-GB", {
+        weekday: "short",
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false,
+        timeZone: "Asia/Bangkok",
+      }).format(new Date(data[0].tanggal)),
+    },
     { kategori: "Suara Tidak Sah", jumlah: data[0].tidak_sah },
     {
-      kategori: "Total Suara Sah",
+      kategori: "Total Partisipasi",
       jumlah: `${data[0].total_suara_masuk} / ${data[0].total_dpt} <b>(${data[0].persen_suara_masuk}%)</b>`,
+    },
+    {
+      kategori: "Total Suara Sah",
+      jumlah: `${data[0].total_suara_sah} / ${data[0].total_dpt} <b>(${data[0].persen_total_suara_sah}%)</b>`,
     },
     {
       kategori: "Total TPS Input",
