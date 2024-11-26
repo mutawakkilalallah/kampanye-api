@@ -152,6 +152,9 @@ app.get("/hasil-cek-tps", async (req, res) => {
   const data = await sequelize.query(
     `SELECT k.id_kelurahan, k.nama_kelurahan, JSON_ARRAYAGG( JSON_OBJECT( 'tps_nomor', t.tps_nomor, 'htps_id', ht.htps_id ) ) AS tps FROM kelurahan k LEFT JOIN tps t ON k.id_kelurahan = t.id_kelurahan LEFT JOIN hitungtps ht ON t.tps_id = ht.tps_id WHERE k.id_kecamatan = '${req.query.kec}' GROUP BY k.id_kelurahan;`
   );
+  data[0].forEach((d) => {
+    d.tps = JSON.parse(d.tps);
+  });
   res.json({ data: data[0] });
 });
 
