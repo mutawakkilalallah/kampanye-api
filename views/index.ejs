@@ -60,8 +60,11 @@
         </div>
         <div class="col-md-6 paslon-list-item">
           <% data.forEach(d => { %>
-          <div class="row align-items-center">
-            <div class="col-md-3" data-paslon-id="<%= d.paslon_nourut %>">
+          <div
+            class="row align-items-center"
+            data-paslon-id="<%= d.paslon_nourut %>"
+          >
+            <div class="col-md-3">
               <img
                 src="https://sribertech.shop/assets/img/paslon/<%= d.paslon_foto %>"
                 alt="Foto Paslon <%= d.paslon_nama %>"
