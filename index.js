@@ -143,7 +143,7 @@ ORDER BY
 
 app.get("/cek-tps", async (req, res) => {
   const data = await sequelize.query(
-    `select id_kecamatan, nama_kecamatan from kecamatan where id_kota = '16.04'`
+    `select id_kecamatan, nama_kecamatan from kecamatan where id_kota = '16.71'`
   );
   res.render("cektps", { data: data[0] });
 });
