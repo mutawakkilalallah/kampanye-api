@@ -37,7 +37,7 @@
         </div>
       </div>
       <hr />
-      <p class="text-center">
+      <p class="text-center versi">
         <b
           >Versi: <%= new Intl.DateTimeFormat('en-GB', { weekday: 'short', day:
           'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute:
@@ -48,7 +48,7 @@
           data[0].total_dpt %> DPT (<%= data[0].persen_total_suara_sah %>%)
         </b>
       </p>
-      <p class="text-center text-muted">
+      <p class="text-center text-muted summary">
         Suara Sah: <%= data[0].total_suara_sah %> Tidak Sah: <%=
         data[0].tidak_sah %> Partisipasi: <%= data[0].total_suara_masuk %> (<%=
         data[0].persen_suara_masuk %>%)
@@ -57,9 +57,12 @@
         <div class="col-md-6">
           <canvas id="paslonChart" height="300"></canvas>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6 paslon-list-item">
           <% data.forEach(d => { %>
-          <div class="row align-items-center">
+          <div
+            class="row align-items-center"
+            data-paslon-id="<%= d.paslon_nourut %>"
+          >
             <div class="col-md-3">
               <img
                 src="https://bzwin-pilkada.id/assets/img/paslon/<%= d.paslon_foto %>"
@@ -72,7 +75,7 @@
             <div class="col-md-9">
               <p>Nomer Urut: <b><%= d.paslon_nourut %></b></p>
               <p><b><%= d.paslon_nama %></b></p>
-              <p>
+              <p class="paslon-list-hasil-suara">
                 Total Suara:
                 <b><%= d.suara_paslon %> (<%= d.persen_suara_paslon %>)%</b>
               </p>

@@ -10,14 +10,14 @@ function initializeChart(data) {
   const percentages = data.map((d) => parseFloat(d.persen_suara_paslon)); // Persentase suara
 
   paslonChart = new Chart(ctx, {
-    type: "bar", // Jenis chart (bisa 'bar', 'pie', 'doughnut', dll.)
+    type: "bar",
     data: {
       labels: labels,
       datasets: [
         {
           label: "HASIL PEROLEHAN SUARA",
           data: percentages,
-          backgroundColor: ["#b80254", "#02b820", "#0244b8"], // Warna paslon
+          backgroundColor: ["#b80254", "#02b820", "#0244b8"],
         },
       ],
     },
@@ -39,96 +39,96 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 socket.on("updateData", (data) => {
+  // Update chart
   if (!paslonChart) {
     initializeChart(data);
   } else {
-    // Update data pada chart
-    paslonChart.data.labels = data.map((d) => d.paslon_nama); // Update label
+    paslonChart.data.labels = data.map((d) => d.paslon_nama);
     paslonChart.data.datasets[0].data = data.map((d) =>
       parseFloat(d.persen_suara_paslon)
-    ); // Update data
-    paslonChart.update(); // Render ulang chart
+    );
+    paslonChart.update();
   }
 
-  // Daftar Paslon
-  const paslonList = document.getElementById("paslon-list");
+  // Update daftar paslon
+  const paslonList = document.querySelector(".paslon-list-item");
 
-  // Iterate over data and update only parts that need to change
-  data.forEach((d, index) => {
-    const paslonItem = paslonList.children[index]; // Find the corresponding list item
+  // Iterate over data dan update hanya bagian total suara
+  data.forEach((d) => {
+    // Cari elemen paslon berdasarkan nomor urut
+    const row = paslonList.querySelector(
+      `[data-paslon-id="${d.paslon_nourut}"]`
+    );
 
-    // If paslonItem does not exist, create it
-    if (!paslonItem) {
-      const li = document.createElement("li");
+    // Jika elemen tidak ada, buat elemen baru
+    if (!row) {
+      const rowElement = document.createElement("div");
+      rowElement.className = "row align-items-center mb-3";
+      rowElement.setAttribute("data-paslon-id", d.paslon_nourut);
 
-      // Tambahkan elemen gambar
+      const colImage = document.createElement("div");
+      colImage.className = "col-md-3";
+
       const img = document.createElement("img");
       img.src = `https://bzwin-pilkada.id/assets/img/paslon/${d.paslon_foto}`;
       img.alt = `Foto Paslon ${d.paslon_nama}`;
-      img.width = 150;
+      img.height = 96;
+      img.width = 96;
+      img.style.objectFit = "cover";
 
-      // Tambahkan informasi paslon (nama, nomor urut)
-      const nomorUrut = document.createElement("p");
-      nomorUrut.innerHTML = `<strong>Nomor Urut: ${d.paslon_nourut}</strong>`;
+      colImage.appendChild(img);
 
-      const namaPaslon = document.createElement("p");
-      namaPaslon.innerHTML = `<strong>${d.paslon_nama}</strong>`;
+      const colInfo = document.createElement("div");
+      colInfo.className = "col-md-9";
 
-      // Tambahkan elemen total suara (yang akan diupdate)
-      const totalSuara = document.createElement("p");
-      totalSuara.classList.add("total-suara"); // Add class for easy selection
-
-      li.appendChild(img);
-      li.appendChild(nomorUrut);
-      li.appendChild(namaPaslon);
-      li.appendChild(totalSuara);
-      paslonList.appendChild(li);
-    }
-
-    // Update only the "Total Suara" section
-    const totalSuaraElement = paslonItem.querySelector(".total-suara");
-    totalSuaraElement.innerHTML = `
-      Total Suara: <br />
-      <b>${d.suara_paslon} (${d.persen_suara_paslon}%)</b>
+      colInfo.innerHTML = `
+      <p>Nomer Urut: <b>${d.paslon_nourut}</b></p>
+      <p><b>${d.paslon_nama}</b></p>
+      <p class="paslon-list-hasil-suara">
+        Total Suara: <b>${d.suara_paslon} (${d.persen_suara_paslon}%)</b>
+      </p>
     `;
+
+      rowElement.appendChild(colImage);
+      rowElement.appendChild(colInfo);
+      paslonList.appendChild(rowElement);
+    } else {
+      // Jika elemen sudah ada, hanya update total suara
+      const totalSuaraElement = row.querySelector(".paslon-list-hasil-suara");
+      totalSuaraElement.innerHTML = `
+      Total Suara: <b>${d.suara_paslon} (${d.persen_suara_paslon}%)</b>
+    `;
+    }
   });
 
-  // Tabel Rekapan (same as before)
-  const tbody = document.querySelector("table tbody");
-  tbody.innerHTML = ""; // Kosongkan tabel sebelum diperbarui
-
-  const container = document.querySelector(".results-container"); // Tambahkan div dengan class 'results-container' untuk menampung hasil
-  const dataInfo = data[0]; // Data yang digunakan
-
-  const versiElement = document.createElement("p");
-  versiElement.className = "text-center";
+  // Update versi dan summary
+  const versiElement = document.querySelector(
+    ".results-container > p:nth-child(3)"
+  );
   versiElement.innerHTML = `
-  <b>
-    Versi: ${new Intl.DateTimeFormat("en-GB", {
-      weekday: "short",
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: false,
-      timeZone: "Asia/Bangkok",
-    }).format(new Date(dataInfo.tanggal))} Progress: ${
-    dataInfo.total_tps_input
-  } dari ${dataInfo.total_tps} TPS (${dataInfo.persen_tps_input}%), ${
-    dataInfo.total_suara_sah
-  } dari ${dataInfo.total_dpt} DPT (${dataInfo.persen_total_suara_sah}%)
-  </b>
-`;
+    <b>
+      Versi: ${new Intl.DateTimeFormat("en-GB", {
+        weekday: "short",
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false,
+        timeZone: "Asia/Bangkok",
+      }).format(new Date(data[0].tanggal))} Progress: ${
+    data[0].total_tps_input
+  } dari ${data[0].total_tps} TPS (${data[0].persen_tps_input}%), ${
+    data[0].total_suara_sah
+  } dari ${data[0].total_dpt} DPT (${data[0].persen_total_suara_sah}%)
+    </b>
+  `;
 
-  const summaryElement = document.createElement("p");
-  summaryElement.className = "text-center text-muted";
+  const summaryElement = document.querySelector(
+    ".results-container > p:nth-child(4)"
+  );
   summaryElement.innerHTML = `
-  Suara Sah: ${dataInfo.total_suara_sah} Tidak Sah: ${dataInfo.tidak_sah} Partisipasi: ${dataInfo.total_suara_masuk} (${dataInfo.persen_suara_masuk}%)
-`;
-
-  // Append elements to the container
-  container.appendChild(versiElement);
-  container.appendChild(summaryElement);
+    Suara Sah: ${data[0].total_suara_sah} Tidak Sah: ${data[0].tidak_sah} Partisipasi: ${data[0].total_suara_masuk} (${data[0].persen_suara_masuk}%)
+  `;
 });
