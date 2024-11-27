@@ -113,7 +113,7 @@ SELECT
     td.total_dpt,
     ti.total_tps_input,
     tt.total_tps,
-    ROUND((ps.total_suara / tsu.total_suara) * 100, 2) AS persen_suara_paslon,
+    ROUND((ps.total_suara / (tsu.total_suara - ts.total_tidaksah)) * 100, 2) AS persen_suara_paslon,
     ROUND((tsu.total_suara / td.total_dpt) * 100, 2) AS persen_suara_masuk,
     ROUND(ti.total_tps_input / tt.total_tps * 100, 2) AS persen_tps_input,
     tsu.total_suara - ts.total_tidaksah AS total_suara_sah,
