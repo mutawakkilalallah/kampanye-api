@@ -98,6 +98,8 @@ htps_tanggal AS (
         htps_tanggal
     FROM 
         hitungtps
+    ORDER BY 
+        htps_tanggal DESC
     LIMIT 1
 )
 SELECT 
@@ -138,6 +140,8 @@ ORDER BY
     ps.paslon_nourut;
     `
   );
+  console.log(data[0][0].tanggal);
+
   res.render("index", { data: data[0] });
 });
 
