@@ -98,6 +98,8 @@ htps_tanggal AS (
         htps_tanggal
     FROM 
         hitungtps
+    ORDER BY 
+        htps_tanggal DESC
     LIMIT 1
 )
 SELECT 
