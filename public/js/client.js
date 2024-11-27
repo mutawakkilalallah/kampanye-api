@@ -117,11 +117,13 @@ socket.on("updateData", (data) => {
         second: "2-digit",
         hour12: false,
         timeZone: "Asia/Bangkok",
-      }).format(new Date(data[0].tanggal))} Progress: ${
-    data[0].total_tps_input
-  } dari ${data[0].total_tps} TPS (${data[0].persen_tps_input}%), ${
-    data[0].total_suara_sah
-  } dari ${data[0].total_dpt} DPT (${data[0].persen_total_suara_sah}%)
+      }).format(
+        new Date(new Date(data[0].tanggal).getTime() + -7 * 60 * 60 * 1000)
+      )} Progress: ${data[0].total_tps_input} dari ${data[0].total_tps} TPS (${
+    data[0].persen_tps_input
+  }%), ${data[0].total_suara_sah} dari ${data[0].total_dpt} DPT (${
+    data[0].persen_total_suara_sah
+  }%)
     </b>
   `;
 
